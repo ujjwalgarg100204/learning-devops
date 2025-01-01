@@ -2,6 +2,7 @@ package com.ujjwalgarg.learningdevops.controller;
 
 import com.ujjwalgarg.learningdevops.model.Todo;
 import com.ujjwalgarg.learningdevops.service.TodoService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +27,8 @@ public class TodoController {
   }
 
   @PostMapping
-  public Todo createTodo(@RequestBody Todo todo) {
-    return service.createTodo(todo);
+  public ResponseEntity<Todo> createTodo(@Valid @RequestBody Todo todo) {
+    return ResponseEntity.ok(service.createTodo(todo));
   }
 
   @GetMapping("/{id}")
@@ -38,7 +39,7 @@ public class TodoController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Todo> updateTodo(@PathVariable Long id, @RequestBody Todo todo) {
+  public ResponseEntity<Todo> updateTodo(@PathVariable Long id, @Valid @RequestBody Todo todo) {
     return ResponseEntity.ok(service.updateTodo(id, todo));
   }
 

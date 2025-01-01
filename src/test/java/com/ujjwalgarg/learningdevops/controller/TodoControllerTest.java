@@ -1,23 +1,22 @@
 package com.ujjwalgarg.learningdevops.controller;
 
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ujjwalgarg.learningdevops.model.Todo;
 import com.ujjwalgarg.learningdevops.repository.TodoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -101,5 +100,38 @@ class TodoControllerTest {
 
     mockMvc.perform(get("/api/todos/{id}", testTodo.getId()))
         .andExpect(status().isNotFound());
+  }
+
+  @Test
+  void createTodo_WithBlankTitle_ShouldReturn400() throws Exception {
+    Todo invalidTodo = new Todo();
+    invalidTodo.setTitle("");
+
+    mockMvc.perform(post("/api/todos")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(invalidTodo)))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void createTodo_WithShortTitle_ShouldReturn400() throws Exception {
+    Todo invalidTodo = new Todo();
+    invalidTodo.setTitle("ab");
+
+    mockMvc.perform(post("/api/todos")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(invalidTodo)))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.title", containsString("between 3 and 100")));
+  }
+
+  @Test
+  void updateTodo_WithInvalidTitle_ShouldReturn400() throws Exception {
+    testTodo.setTitle("");
+
+    mockMvc.perform(put("/api/todos/{id}", testTodo.getId())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(testTodo)))
+        .andExpect(status().isBadRequest());
   }
 }
