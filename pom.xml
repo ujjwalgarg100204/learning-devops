@@ -29,6 +29,9 @@
   </scm>
   <properties>
     <java.version>17</java.version>
+    <sonar.projectKey>learning-devops</sonar.projectKey>
+    <sonar.projectName>learning-devops</sonar.projectName>
+    <sonar.host.url>http://localhost:9000</sonar.host.url>
   </properties>
   <dependencies>
     <dependency>
@@ -52,6 +55,32 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.sonarsource.scanner.maven</groupId>
+        <artifactId>sonar-maven-plugin</artifactId>
+        <version>3.9.1.2184</version>
+      </plugin>
+      <!-- Jacoco Plugin for Code Coverage -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.8</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <!-- Generate Report -->
+          <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
