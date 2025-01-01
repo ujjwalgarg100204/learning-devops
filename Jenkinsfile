@@ -15,7 +15,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') { // Name from Jenkins configuration
+                withSonarQubeEnv('LocalSonarQube') { // Name from Jenkins configuration
                     sh 'mvn sonar:sonar -Dsonar.token=${SONAR_AUTH_TOKEN}'
                 }
             }
