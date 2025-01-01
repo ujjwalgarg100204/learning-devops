@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven 3.6.3'
-    }
-
     environment {
         SONAR_HOST_URL = 'http://localhost:9000'
         SONAR_AUTH_TOKEN = credentials('local-sq1-secret')
